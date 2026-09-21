@@ -2,7 +2,7 @@ name: Dragon CI/CD Pipeline
 
 on:
   workflow_dispatch: 
-  push:            # runs every time you push code
+  #push:            # runs every time you push code
 
 jobs:
   # ---------- STAGE 1: BUILD ----------
