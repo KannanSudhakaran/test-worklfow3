@@ -1,0 +1,51 @@
+name: Dragon CI/CD Pipeline
+
+on:
+  workflow_dispatch: 
+  push:            # runs every time you push code
+
+jobs:
+  # ---------- STAGE 1: BUILD ----------
+  build_job_1:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Cowsay
+        run: sudo apt-get install cowsay -y
+
+      - name: Create dragon file
+        run: cowsay -f dragon "Run for cover, I am a DRAGON....RAWR" > dragon.txt
+
+      - name: Upload dragon file
+        uses: actions/upload-artifact@v4
+        with:
+          name: dragon-text-file
+          path: dragon.txt
+
+  # ---------- STAGE 2: TEST ----------
+  test_job_2:
+    needs: build_job_1
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dragon file
+        uses: actions/download-artifact@v4
+        with:
+          name: dragon-text-file
+
+      - name: Test file contains "dragon"
+        run: grep -i "dragon" dragon.txt
+
+  # ---------- STAGE 3: DEPLOY ----------
+  deploy_job_3:
+    needs: test_job_2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dragon file
+        uses: actions/download-artifact@v4
+        with:
+          name: dragon-text-file
+
+      - name: Read file
+        run: cat dragon.txt
+
+      - name: Deploy
+        run: echo "Deploying ... ... ."
